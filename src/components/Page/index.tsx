@@ -5,7 +5,7 @@ import { Container } from "./styles";
 
 function Page() {
   const models = [
-    "Model One",
+    "Lorem ipsum",
     "Model Two",
     "Model Three",
     "Model Four",

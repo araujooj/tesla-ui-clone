@@ -1,8 +1,6 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  // src/components/Page/styles.ts
-
   .colored:nth-child(1) {
     background: #f1ffe7;
   }
