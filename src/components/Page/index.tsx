@@ -1,37 +1,32 @@
-import DefaultOverlayContent from "../DefaultOverlayContent";
-import ModelSection from "../Model/ModelSection";
+import { useCallback, useLayoutEffect, useRef, useState } from "react";
+import { useSpring, animated } from "react-spring";
+import { useIntersectionObserver } from "../../hooks/useIntersecionObserver";
 import ModelsWrapper from "../Model/ModelsWrapper";
+import Section from "../Section";
 import { Container } from "./styles";
 
 function Page() {
-  const models = [
-    "Lorem ipsum",
-    "Model Two",
-    "Model Three",
-    "Model Four",
-    "Model Five",
-    "Model X",
-    "Model S",
-  ];
+  const triggerRef = useRef(null);
+
+  const dataRef = useIntersectionObserver({
+    elementRef: triggerRef,
+    freezeOnceVisible: false,
+  });
 
   return (
     <Container>
       <ModelsWrapper>
-        <div>
-          {models.map((model) => (
-            <ModelSection
-              key={model}
-              className="colored"
-              modelName={model}
-              overlayNode={
-                <DefaultOverlayContent
-                  label={model}
-                  description="Order online for delivery"
-                />
-              }
-            />
-          ))}
-        </div>
+        <Section
+          label="Nosso produto"
+          triggerRef={triggerRef}
+          dataRef={dataRef}
+          visibleInFirstRender
+        />
+        <Section
+          label="Nossa liderança"
+          triggerRef={triggerRef}
+          dataRef={dataRef}
+        />
       </ModelsWrapper>
     </Container>
   );

@@ -1,59 +1,22 @@
-import { useEffect } from "react";
-import { ReactNode, useCallback, useContext, useRef, useState } from "react";
+import {
+  ReactNode,
+  useCallback,
+  useContext,
+  useLayoutEffect,
+  useRef,
+  useState,
+} from "react";
+import { useScroll } from "react-use";
 import ModelsContext, { CarModel } from "../../../contexts/ModelsContext";
-import { ModelOverlay } from "../ModelOverlay";
 
-import { Container, OverlayRoot } from "./styles";
+import { Container } from "./styles";
 
 interface ModelsWrapperProps {
   children: ReactNode;
 }
 
 function ModelsWrapper({ children }: ModelsWrapperProps) {
-  const [registeredModels, setRegisteredModels] = useState<CarModel[]>([]);
-
-  const wrapperRef = useRef<HTMLDivElement>(null);
-
-  const registerModel = useCallback((model: CarModel) => {
-    setRegisteredModels((oldState) => [...oldState, model]);
-  }, []);
-
-  const unregisterModel = useCallback((modelName: string) => {
-    setRegisteredModels((oldState) =>
-      oldState.filter((model) => model.modelName !== modelName)
-    );
-  }, []);
-
-  const getModelByName = useCallback(
-    (modelName: string) => {
-      return registeredModels.find((model) => model.modelName === modelName);
-    },
-    [registeredModels]
-  );
-
-  return (
-    <ModelsContext.Provider
-      value={{
-        getModelByName,
-        registeredModels,
-        registerModel,
-        unregisterModel,
-        wrapperRef,
-      }}
-    >
-      <Container ref={wrapperRef}>
-        <OverlayRoot>
-          {registeredModels.map((model) => (
-            <ModelOverlay model={model} key={model.modelName}>
-              {model.overlayNode}
-            </ModelOverlay>
-          ))}
-        </OverlayRoot>
-
-        {children}
-      </Container>
-    </ModelsContext.Provider>
-  );
+  return <Container>{children}</Container>;
 }
 
 export default ModelsWrapper;
