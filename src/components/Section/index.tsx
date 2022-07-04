@@ -1,47 +1,43 @@
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import Image from "next/image";
+import React, { useLayoutEffect, useRef, useState } from "react";
 import { useTrail, animated as a } from "react-spring";
-import { useMouse } from "react-use";
+import { useIntersectionObserver } from "../../hooks/useIntersectionObserver";
 import { Container } from "./styles";
-import VisibilitySensor from "react-visibility-sensor";
+import Photo from "../../assets/kit-photo.png";
 
 interface SectionProps {
-  label: string;
-  triggerRef: React.RefObject<HTMLDivElement>;
-  dataRef: IntersectionObserverEntry;
-  visibleInFirstRender?: boolean;
+  title: string;
 }
 
 const config = { mass: 5, tension: 2000, friction: 300 };
 
-export default function Section({
-  label,
-  triggerRef,
-  dataRef,
-  visibleInFirstRender = false,
-}: SectionProps) {
-  const items = Array(5).fill(label);
+export default function Section({ title }: SectionProps) {
+  const triggerRef = useRef(null);
+
+  const entry = useIntersectionObserver({
+    elementRef: triggerRef,
+    threshold: 0.3,
+  });
+
+  const titles = Array(5).fill(title);
 
   const [toggle, set] = useState(false);
 
-  const trail = useTrail(items.length, {
+  const trail = useTrail(titles.length, {
     config,
     opacity: toggle ? 1 : 0,
     x: toggle ? 0 : 20,
-    height: toggle ? 80 : 0,
+    height: toggle ? 40 : 0,
     from: { opacity: 0, x: 20, height: 0 },
   });
 
   useLayoutEffect(() => {
-    if (visibleInFirstRender) {
-      return set(true);
+    if (entry.isIntersecting) {
+      return set(entry.isIntersecting);
     }
+  }, [entry.isIntersecting]);
 
-    if (dataRef.isIntersecting) {
-      return set(true);
-    }
-  }, [dataRef.isIntersecting]);
-
-  console.log(dataRef.isIntersecting);
+  console.log(title, entry.isIntersecting);
 
   const opacityTitles: any = {
     1: "0.6",
@@ -51,10 +47,11 @@ export default function Section({
   };
 
   return (
-    <Container className="trails-main">
+    <Container>
       <div>
         {trail.map(({ x, height, ...rest }, index) => (
           <a.div
+            ref={triggerRef}
             key={x.id}
             className="trails-text"
             style={{
@@ -63,12 +60,12 @@ export default function Section({
             }}
           >
             <a.div style={{ height, opacity: opacityTitles[index] }}>
-              {items[index]}
+              {titles[index]}
             </a.div>
           </a.div>
         ))}
       </div>
-      <div ref={triggerRef} />
+      <Image src={Photo} alt="Gradient" />
     </Container>
   );
 }

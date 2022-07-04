@@ -5,7 +5,6 @@ import NextDocument, {
   NextScript,
   DocumentContext,
 } from "next/document";
-import { GlobalStyles } from "../styles/GlobalStyle";
 
 export default class Document extends NextDocument {
   static async getInitialProps(ctx: DocumentContext) {
